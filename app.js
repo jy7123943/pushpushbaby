@@ -30,6 +30,7 @@ slackEvents.on('app_mention', (event) => {
       });
       console.log('🚀 ~ user.name:', user.name);
       console.log('🚀 ~ user.email:', user.profile.email);
+      console.log('🚀 ~ user.real_name:', user.profile.real_name);
       // const { data: file } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
       //   owner: 'jy7123943',
       //   repo: 'plan',
