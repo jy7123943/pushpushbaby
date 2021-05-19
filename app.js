@@ -46,6 +46,7 @@ slackEvents.on('app_mention', (event) => {
       };
 
       const path = `${year}년_${month}월/${weekOfMonth}주차_스터디.md`;
+      const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
       let file = null;
 
       try {
@@ -62,8 +63,6 @@ slackEvents.on('app_mention', (event) => {
         }
       }
 
-      const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
-
       if (file === null) {
         // file is not defined
 
@@ -73,7 +72,7 @@ slackEvents.on('app_mention', (event) => {
           repo: 'plan',
           path,
           message: `Add study - ${date}`,
-          content: Base64.encode(originalContent + userMessage),
+          content: Base64.encode(userMessage),
           committer,
         });
         console.log('🚀 ~ data', data);
