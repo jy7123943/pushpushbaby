@@ -63,6 +63,7 @@ slackEvents.on('app_mention', (event) => {
         }
       }
 
+      let uploadedLink = null;
       if (file === null) {
         // file is not defined
 
@@ -75,7 +76,8 @@ slackEvents.on('app_mention', (event) => {
           content: Base64.encode(userMessage),
           committer,
         });
-        console.log('🚀 ~ data', data);
+
+        uploadedLink = data.content.html_url;
       } else {
         // file is already defined
 
@@ -91,12 +93,13 @@ slackEvents.on('app_mention', (event) => {
           sha: file.sha,
           committer,
         });
-        console.log('🚀 ~ data', data);
+
+        uploadedLink = data.content.html_url;
       }
 
       await slackClient.chat.postMessage({
         channel: event.channel,
-        text: `<@${event.user}> 성공적으로 업데이트되었습니다.`,
+        text: `<@${event.user}> 성공적으로 업데이트되었습니다. <${uploadedLink}|Link>`,
       });
     } catch (error) {
       await slackClient.chat.postMessage({
