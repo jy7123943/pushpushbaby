@@ -1,0 +1,26 @@
+{
+  "name": "pushpushbaby",
+  "version": "0.1.0",
+  "description": "Slack bot",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jy7123943/pushpushbaby.git"
+  },
+  "keywords": [
+    "slackbot"
+  ],
+  "author": "juyeonH",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jy7123943/pushpushbaby/issues"
+  },
+  "homepage": "https://github.com/jy7123943/pushpushbaby#readme",
+  "dependencies": {
+    "@slack/events-api": "^3.0.0",
+    "@slack/web-api": "^6.2.3"
+  }
+}
