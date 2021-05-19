@@ -33,56 +33,77 @@ slackEvents.on('app_mention', (event) => {
     locale,
     weekStartsOn: 1,
   });
-  const date = format(zonedTime, 'yyyy-MM-dd', { locale });
+  const date = format(zonedTime, 'yyyy-MM-dd HH:mm', { locale });
 
   console.log(`Received a message event: user ${event.user} in channel ${event.channel} says ${event.text} / ${date} ${year}년_${month}월_${weekOfMonth}주차`);
 
   (async () => {
     try {
       const { user } = await slackClient.users.info({ user: event.user });
-      console.log('🚀 ~ user.name:', user.name);
-      console.log('🚀 ~ user.email:', user.profile.email);
-      console.log('🚀 ~ user.real_name:', user.profile.real_name);
+      const committer = {
+        name: user.profile.real_name,
+        email: user.profile.email,
+      };
 
-      let fileSha = null;
+      const path = `${year}년_${month}월/${weekOfMonth}주차_스터디.md`;
+      let file = null;
 
       try {
-        const { data: file } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+        const { data } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
           owner: 'jy7123943',
           repo: 'plan',
-          path: `${year}년_${month}월/${weekOfMonth}주차_스터디.md`,
+          path,
         });
 
-        fileSha = file.sha;
+        file = data;
       } catch (error) {
         if (error.status !== 404) {
           throw error;
         }
       }
-      console.log('🚀 ~ file: app.js ~ line 51 ~ fileSha', fileSha);
-      // const originalContent = Base64.decode(file.content);
 
-      // const userMessage = event.text.replace('<@U0106J68PHP> ', '');
-      // const { data } = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-      //   accept: 'application/vnd.github.v3+json',
-      //   owner: 'jy7123943',
-      //   repo: 'plan',
-      //   path: 'hello/hello.md',
-      //   message: `Add new file - ${new Date().toISOString()}`,
-      //   content: Base64.encode(originalContent + userMessage),
-      //   // sha: file.sha,
-      //   committer: {
-      //     name: 'helloworld712',
-      //     email: 'juy.dev@gmail.com',
-      //   }
-      // });
-      // console.log('🚀 ~ file: app.js ~ line 22 ~ data', data);
-      // await slackClient.chat.postMessage({
-      //   channel: event.channel,
-      //   text: `Hello <@${event.user}>`,
-      // });
+      const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
+
+      if (file === null) {
+        // file is not defined
+
+        const { data } = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+          accept: 'application/vnd.github.v3+json',
+          owner: 'jy7123943',
+          repo: 'plan',
+          path,
+          message: `Add study - ${date}`,
+          content: Base64.encode(originalContent + userMessage),
+          committer,
+        });
+        console.log('🚀 ~ data', data);
+      } else {
+        // file is already defined
+
+        const originalContent = Base64.decode(file.content);
+
+        const { data } = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+          accept: 'application/vnd.github.v3+json',
+          owner: 'jy7123943',
+          repo: 'plan',
+          path,
+          message: `Add study - ${date}`,
+          content: Base64.encode(originalContent + userMessage),
+          sha: file.sha,
+          committer,
+        });
+        console.log('🚀 ~ data', data);
+      }
+
+      await slackClient.chat.postMessage({
+        channel: event.channel,
+        text: `<@${event.user}> 성공적으로 업데이트되었습니다.`,
+      });
     } catch (error) {
-      console.log(error);
+      await slackClient.chat.postMessage({
+        channel: event.channel,
+        text: `<@${event.user}> 업데이트에 실패했습니다: ${error.message}`,
+      });
     }
   })();
 });
