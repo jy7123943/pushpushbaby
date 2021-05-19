@@ -47,7 +47,7 @@ slackEvents.on('app_mention', (event) => {
 
       const path = `${year}년_${month}월/${weekOfMonth}주차_스터디.md`;
       const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
-      let file = null;
+      let file;
 
       try {
         const { data } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
@@ -63,39 +63,20 @@ slackEvents.on('app_mention', (event) => {
         }
       }
 
-      let uploadedLink = null;
-      if (file === null) {
-        // file is not defined
+      const originalContent = file ? Base64.decode(file.content) : '';
 
-        const { data } = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-          accept: 'application/vnd.github.v3+json',
-          owner: 'jy7123943',
-          repo: 'plan',
-          path,
-          message: `Add study - ${date}`,
-          content: Base64.encode(userMessage),
-          committer,
-        });
+      const { data } = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+        accept: 'application/vnd.github.v3+json',
+        owner: 'jy7123943',
+        repo: 'plan',
+        path,
+        message: `Add study - ${date}`,
+        content: Base64.encode(originalContent + userMessage),
+        sha: file ? file.sha : undefined,
+        committer,
+      });
 
-        uploadedLink = data.content.html_url;
-      } else {
-        // file is already defined
-
-        const originalContent = Base64.decode(file.content);
-
-        const { data } = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-          accept: 'application/vnd.github.v3+json',
-          owner: 'jy7123943',
-          repo: 'plan',
-          path,
-          message: `Add study - ${date}`,
-          content: Base64.encode(originalContent + userMessage),
-          sha: file.sha,
-          committer,
-        });
-
-        uploadedLink = data.content.html_url;
-      }
+      const uploadedLink = data.content.html_url;
 
       await slackClient.chat.postMessage({
         channel: event.channel,
