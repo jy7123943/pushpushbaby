@@ -7,6 +7,12 @@ const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
 const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET);
 
+const locale = require('date-fns/locale/ko');
+const { format, utcToZonedTime } = require('date-fns-tz');
+const getWeekOfMonth = require('date-fns/getWeekOfMonth');
+
+const TIME_ZONE = 'Asia/Seoul';
+
 const {
   SLACK_ACCESS_TOKEN,
   GITHUB_ACCESS_TOKEN,
@@ -20,22 +26,40 @@ const octokit = new Octokit({
 });
 
 slackEvents.on('app_mention', (event) => {
-  console.log(`Received a message event: user ${event.user} in channel ${event.channel} says ${event.text}`);
+  const zonedTime = utcToZonedTime(new Date(), TIME_ZONE);
+  const year = zonedTime.getFullYear();
+  const month = zonedTime.getMonth() + 1;
+  const weekOfMonth = getWeekOfMonth(zonedTime, {
+    locale,
+    weekStartsOn: 1,
+  });
+  const date = format(zonedTime, 'yyyy-MM-dd', { locale });
 
+  console.log(`Received a message event: user ${event.user} in channel ${event.channel} says ${event.text} / ${date} ${year}년_${month}월_${weekOfMonth}주차`);
 
   (async () => {
     try {
-      const { user } = await slackClient.users.info({
-        user: event.user
-      });
+      const { user } = await slackClient.users.info({ user: event.user });
       console.log('🚀 ~ user.name:', user.name);
       console.log('🚀 ~ user.email:', user.profile.email);
       console.log('🚀 ~ user.real_name:', user.profile.real_name);
-      // const { data: file } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-      //   owner: 'jy7123943',
-      //   repo: 'plan',
-      //   path: 'hello.md'
-      // });
+
+      let fileSha = null;
+
+      try {
+        const { data: file } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+          owner: 'jy7123943',
+          repo: 'plan',
+          path: `${year}년_${month}월/${weekOfMonth}주차_스터디.md`,
+        });
+
+        fileSha = file.sha;
+      } catch (error) {
+        if (error.status !== 404) {
+          throw error;
+        }
+      }
+      console.log('🚀 ~ file: app.js ~ line 51 ~ fileSha', fileSha);
       // const originalContent = Base64.decode(file.content);
 
       // const userMessage = event.text.replace('<@U0106J68PHP> ', '');
