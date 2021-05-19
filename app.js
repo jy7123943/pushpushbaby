@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const { Octokit } = require('@octokit/core');
-const {Base64} = require('js-base64');
+const { Base64 } = require('js-base64');
 
 const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
@@ -22,34 +22,40 @@ const octokit = new Octokit({
 slackEvents.on('app_mention', (event) => {
   console.log(`Received a message event: user ${event.user} in channel ${event.channel} says ${event.text}`);
 
+
   (async () => {
     try {
-      const { data: file } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-        owner: 'jy7123943',
-        repo: 'plan',
-        path: 'hello.md'
+      const { user } = await slackClient.users.info({
+        user: event.user
       });
-      const originalContent = Base64.decode(file.content);
+      console.log('🚀 ~ user.name:', user.name);
+      console.log('🚀 ~ user.email:', user.profile.email);
+      // const { data: file } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+      //   owner: 'jy7123943',
+      //   repo: 'plan',
+      //   path: 'hello.md'
+      // });
+      // const originalContent = Base64.decode(file.content);
 
-      const userMessage = event.text.replace('<@U0106J68PHP> ', '');
-      const { data } = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-        accept: 'application/vnd.github.v3+json',
-        owner: 'jy7123943',
-        repo: 'plan',
-        path: 'hello/hello.md',
-        message: `Add new file - ${new Date().toISOString()}`,
-        content: Base64.encode(originalContent + userMessage),
-        // sha: file.sha,
-        committer: {
-          name: 'helloworld712',
-          email: 'juy.dev@gmail.com',
-        }
-      });
-      console.log('🚀 ~ file: app.js ~ line 22 ~ data', data);
-      await slackClient.chat.postMessage({
-        channel: event.channel,
-        text: `Hello <@${event.user}>`,
-      });
+      // const userMessage = event.text.replace('<@U0106J68PHP> ', '');
+      // const { data } = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+      //   accept: 'application/vnd.github.v3+json',
+      //   owner: 'jy7123943',
+      //   repo: 'plan',
+      //   path: 'hello/hello.md',
+      //   message: `Add new file - ${new Date().toISOString()}`,
+      //   content: Base64.encode(originalContent + userMessage),
+      //   // sha: file.sha,
+      //   committer: {
+      //     name: 'helloworld712',
+      //     email: 'juy.dev@gmail.com',
+      //   }
+      // });
+      // console.log('🚀 ~ file: app.js ~ line 22 ~ data', data);
+      // await slackClient.chat.postMessage({
+      //   channel: event.channel,
+      //   text: `Hello <@${event.user}>`,
+      // });
     } catch (error) {
       console.log(error);
     }
