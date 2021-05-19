@@ -1,12 +1,21 @@
-const http = require('http');
-const express = require('express');
 require('dotenv').config();
 
-const app = express();
-const server = http.createServer(app);
+const { WebClient } = require('@slack/web-api');
+const { createEventAdapter } = require('@slack/events-api');
+const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET);
 
-const PORT = 3000;
+const SLACK_ACCESS_TOKEN = process.env.SLACK_ACCESS_TOKEN;
 
-server.listen(PORT, () => {
-  console.log(`Server running on ${PORT}`);
+const webClient = new WebClient(SLACK_ACCESS_TOKEN);
+
+slackEvents.on('message', (event) => {
+  console.log(`Received a message event: user ${event.user} in channel ${event.channel} says ${event.text}`);
+});
+
+slackEvents.on('error', console.error);
+
+const PORT = process.env.PORT || 3000;
+
+slackEvents.start(PORT).then(() => {
+  console.log(`Server listening on port ${PORT}`);
 });
