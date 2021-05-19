@@ -6,10 +6,21 @@ const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET);
 
 const SLACK_ACCESS_TOKEN = process.env.SLACK_ACCESS_TOKEN;
 
-const webClient = new WebClient(SLACK_ACCESS_TOKEN);
+const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
 
-slackEvents.on('message', (event) => {
+slackEvents.on('app_mention', (event) => {
   console.log(`Received a message event: user ${event.user} in channel ${event.channel} says ${event.text}`);
+
+  (async () => {
+    try {
+      await slackClient.chat.postMessage({
+        channel: event.channel,
+        text: `Hello <@${event.user}>`,
+      });
+    } catch (error) {
+      console.log(error.data);
+    }
+  })();
 });
 
 slackEvents.on('error', console.error);
