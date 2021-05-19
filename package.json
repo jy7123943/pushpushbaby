@@ -20,8 +20,10 @@
   },
   "homepage": "https://github.com/jy7123943/pushpushbaby#readme",
   "dependencies": {
+    "@octokit/core": "^3.4.0",
     "@slack/events-api": "^3.0.0",
     "@slack/web-api": "^6.2.3",
-    "dotenv": "^9.0.2"
+    "dotenv": "^9.0.2",
+    "js-base64": "^3.6.0"
   }
 }
