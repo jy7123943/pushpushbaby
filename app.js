@@ -10,6 +10,7 @@ const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET);
 const locale = require('date-fns/locale/ko');
 const { format, utcToZonedTime } = require('date-fns-tz');
 const getWeekOfMonth = require('date-fns/getWeekOfMonth');
+const { toHTML } = require('slack-markdown');
 
 const TIME_ZONE = 'Asia/Seoul';
 
@@ -25,7 +26,12 @@ const octokit = new Octokit({
   baseUrl: 'https://api.github.com',
 });
 
+const formMessageToMarkup = (userName, message) => (
+  `<h2>${userName}</h2>` + toHTML(message)
+);
+
 slackEvents.on('app_mention', (event) => {
+  const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
   const zonedTime = utcToZonedTime(new Date(), TIME_ZONE);
   const year = zonedTime.getFullYear();
   const month = zonedTime.getMonth() + 1;
@@ -34,8 +40,6 @@ slackEvents.on('app_mention', (event) => {
     weekStartsOn: 1,
   });
   const date = format(zonedTime, 'yyyy-MM-dd HH:mm', { locale });
-
-  console.log(`Received a message event: user ${event.user} in channel ${event.channel} says ${event.text} / ${date} ${year}년_${month}월_${weekOfMonth}주차`);
 
   (async () => {
     try {
@@ -46,7 +50,6 @@ slackEvents.on('app_mention', (event) => {
       };
 
       const path = `${year}년_${month}월/${weekOfMonth}주차_스터디.md`;
-      const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
       let file;
 
       try {
@@ -71,7 +74,7 @@ slackEvents.on('app_mention', (event) => {
         repo: 'plan',
         path,
         message: `Add study - ${date}`,
-        content: Base64.encode(originalContent + userMessage),
+        content: Base64.encode(originalContent + formMessageToMarkup(user.profile.real_name, userMessage)),
         sha: file ? file.sha : undefined,
         committer,
       });
