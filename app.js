@@ -26,7 +26,7 @@ const octokit = new Octokit({
   baseUrl: 'https://api.github.com',
 });
 
-const formMessageToMarkup = (userName, message) => (
+const convertToMarkdown = (userName, message) => (
   `<h2>${userName}</h2>` + toHTML(message)
 );
 
@@ -74,7 +74,7 @@ slackEvents.on('app_mention', (event) => {
         repo: 'plan',
         path,
         message: `Add study - ${date}`,
-        content: Base64.encode(originalContent + formMessageToMarkup(user.profile.real_name, userMessage)),
+        content: Base64.encode(originalContent + convertToMarkdown(user.profile.real_name, userMessage)),
         sha: file ? file.sha : undefined,
         committer,
       });
