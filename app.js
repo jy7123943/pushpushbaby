@@ -7,11 +7,15 @@ const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
 const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET);
 
-const SLACK_ACCESS_TOKEN = process.env.SLACK_ACCESS_TOKEN;
+const {
+  SLACK_ACCESS_TOKEN,
+  GITHUB_ACCESS_TOKEN,
+  PORT,
+} = process.env;
 
 const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
 const octokit = new Octokit({
-  auth: process.env.GITHUB_ACCESS_TOKEN,
+  auth: GITHUB_ACCESS_TOKEN,
   baseUrl: 'https://api.github.com',
 });
 
@@ -54,8 +58,8 @@ slackEvents.on('app_mention', (event) => {
 
 slackEvents.on('error', console.error);
 
-const PORT = process.env.PORT || 3000;
+const port = PORT || 3000;
 
-slackEvents.start(PORT).then(() => {
-  console.log(`Server listening on port ${PORT}`);
+slackEvents.start(port).then(() => {
+  console.log(`Server listening on port ${port}`);
 });
