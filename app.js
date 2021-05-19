@@ -49,15 +49,16 @@ slackEvents.on('app_mention', (event) => {
         email: user.profile.email,
       };
 
-      const path = `${year}년_${month}월/${weekOfMonth}주차_스터디.md`;
+      const config = {
+        path: `${year}년_${month}월/${weekOfMonth}주차_스터디.md`,
+        owner: 'fepocha',
+        repo: 'study',
+      }
+
       let file;
 
       try {
-        const { data } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-          owner: 'jy7123943',
-          repo: 'plan',
-          path,
-        });
+        const { data } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', config);
 
         file = data;
       } catch (error) {
@@ -69,15 +70,15 @@ slackEvents.on('app_mention', (event) => {
       const originalContent = file ? Base64.decode(file.content) : '';
 
       const { data } = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+        ...config,
         accept: 'application/vnd.github.v3+json',
-        owner: 'jy7123943',
-        repo: 'plan',
-        path,
         message: `Add study - ${date}`,
         content: Base64.encode(originalContent + convertToMarkdown(user.profile.real_name, userMessage)),
         sha: file ? file.sha : undefined,
         committer,
       });
+
+      file = undefined;
 
       const uploadedLink = data.content.html_url;
 
