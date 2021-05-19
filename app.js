@@ -1,5 +1,6 @@
-const http = require("http");
-const express = require("express");
+const http = require('http');
+const express = require('express');
+require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
