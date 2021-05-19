@@ -22,8 +22,6 @@
   "dependencies": {
     "@slack/events-api": "^3.0.0",
     "@slack/web-api": "^6.2.3",
-    "dotenv": "^9.0.2",
-    "express": "^4.17.1",
-    "slack-node": "^0.1.8"
+    "dotenv": "^9.0.2"
   }
 }
