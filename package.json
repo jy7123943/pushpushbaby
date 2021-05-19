@@ -4,6 +4,7 @@
   "description": "Slack bot",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "npm test"
   },
   "repository": {
