@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/jy7123943/pushpushbaby#readme",
   "dependencies": {
+    "dotenv": "^9.0.2",
     "express": "^4.17.1",
     "slack-node": "^0.1.8"
   }
