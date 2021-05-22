@@ -55,16 +55,12 @@ slackEvents.on('app_mention', async (event) => {
     } = formatCurrentTime();
 
     const { user } = await slackClient.users.info({ user: event.user });
-    const committer = {
-      name: user.profile.real_name,
-      email: user.profile.email,
-    };
 
     const gitConfig = {
       path: `${year}년_${month}월/${weekOfMonth}주차_스터디.md`,
       owner: 'fepocha',
       repo: 'study',
-    }
+    };
 
     const file = await getGitFile(gitConfig);
 
@@ -76,8 +72,11 @@ slackEvents.on('app_mention', async (event) => {
       message: `Add study - ${dateString}`,
       content: Base64.encode(originalContent + convertToMarkdown(user.profile.real_name, userMessage)),
       sha: file ? file.sha : undefined,
-      committer,
-    })
+      committer: {
+        name: user.profile.real_name,
+        email: user.profile.email,
+      },
+    });
 
     const uploadedLink = result.content.html_url;
 
