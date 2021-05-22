@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
+    "start:dev": "nodemon app.js",
     "test": "npm test"
   },
   "repository": {
@@ -29,6 +30,7 @@
     "dotenv": "^9.0.2",
     "express": "^4.17.1",
     "js-base64": "^3.6.0",
+    "nodemon": "^2.0.7",
     "slack-markdown": "0.0.5"
   }
 }
