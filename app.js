@@ -7,7 +7,7 @@ const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
 
 const { convertToMarkdown, formatCurrentTime } = require('./utils');
-const { createOrUpdateGitFile, getGitFile } = require('./octokit');
+const { createOrUpdateGitFile, getGitFile } = require('./utils/octokit');
 
 const {
   SLACK_ACCESS_TOKEN,
