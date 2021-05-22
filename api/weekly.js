@@ -16,7 +16,7 @@ const postWeeklyStudyReport = async (slackClient, {
   } = formatCurrentTime();
 
   const gitConfig = {
-    path: `${year}년_${month}월/${weekOfMonth}주차_스터디.md`,
+    path: `스터디_리포트/${year}년_${month}월/${weekOfMonth}주차_스터디.md`,
     owner: 'fepocha',
     repo: 'study',
   };
@@ -42,4 +42,4 @@ const postWeeklyStudyReport = async (slackClient, {
 
 module.exports = {
   postWeeklyStudyReport,
-}
+};
