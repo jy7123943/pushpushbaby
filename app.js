@@ -23,8 +23,10 @@ app.use(express.json());
 
 const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
 
-app.post('/weekly', async (req, res) => {
+app.post('/upload/:uploadType', async (req, res) => {
   try {
+    const { uploadType } = req.params;
+
     const {
       user_id: userId,
       text,
@@ -33,6 +35,7 @@ app.post('/weekly', async (req, res) => {
     const { content: { html_url }} = await postStudyMarkdown(slackClient, {
       userId,
       userMessage: text.trim(),
+      uploadType,
     });
 
     res.json({
