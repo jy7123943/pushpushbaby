@@ -5,7 +5,7 @@ const express = require('express');
 const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
 
-const { postStudyMarkdown } = require('./api/weekly');
+const { postStudyMarkdown } = require('./api');
 
 const {
   SLACK_ACCESS_TOKEN,
