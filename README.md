@@ -39,5 +39,6 @@ enter를 누르고 잠시 기다리면 PushPushBaby가 자동으로 repo에 업�
 
 ### 5. 완료!
 다음과 같이 업로드됩니다!
+
 <img width="591" alt="result" src="https://user-images.githubusercontent.com/32149561/119219390-4f607080-bb20-11eb-8c16-2f9de92d7af8.png">
 
