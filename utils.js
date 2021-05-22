@@ -1,3 +1,5 @@
+const { toHTML } = require('slack-markdown');
+
 const convertToMarkdown = (userName, message) => (
   `<h2>${userName}</h2>` + toHTML(message)
 );

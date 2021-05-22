@@ -12,7 +12,6 @@ const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET);
 const locale = require('date-fns/locale/ko');
 const { format, utcToZonedTime } = require('date-fns-tz');
 const getWeekOfMonth = require('date-fns/getWeekOfMonth');
-const { toHTML } = require('slack-markdown');
 const { convertToMarkdown } = require('./utils');
 
 const app = express();
