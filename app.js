@@ -13,6 +13,7 @@ const locale = require('date-fns/locale/ko');
 const { format, utcToZonedTime } = require('date-fns-tz');
 const getWeekOfMonth = require('date-fns/getWeekOfMonth');
 const { toHTML } = require('slack-markdown');
+const { convertToMarkdown } = require('./utils');
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -32,10 +33,6 @@ const octokit = new Octokit({
   auth: GITHUB_ACCESS_TOKEN,
   baseUrl: 'https://api.github.com',
 });
-
-const convertToMarkdown = (userName, message) => (
-  `<h2>${userName}</h2>` + toHTML(message)
-);
 
 slackEvents.on('app_mention', (event) => {
   const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
