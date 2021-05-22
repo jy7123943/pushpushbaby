@@ -9,16 +9,11 @@ const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
 const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET);
 
-const locale = require('date-fns/locale/ko');
-const { format, utcToZonedTime } = require('date-fns-tz');
-const getWeekOfMonth = require('date-fns/getWeekOfMonth');
-const { convertToMarkdown } = require('./utils');
+const { convertToMarkdown, formatCurrentTime } = require('./utils');
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-const TIME_ZONE = 'Asia/Seoul';
 
 const {
   SLACK_ACCESS_TOKEN,
@@ -37,14 +32,12 @@ app.use('/slack/events', slackEvents.expressMiddleware())
 
 slackEvents.on('app_mention', (event) => {
   const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
-  const zonedTime = utcToZonedTime(new Date(), TIME_ZONE);
-  const year = zonedTime.getFullYear();
-  const month = zonedTime.getMonth() + 1;
-  const weekOfMonth = getWeekOfMonth(zonedTime, {
-    locale,
-    weekStartsOn: 1,
-  });
-  const date = format(zonedTime, 'yyyy-MM-dd HH:mm', { locale });
+  const {
+    year,
+    month,
+    weekOfMonth,
+    dateString,
+  } = formatCurrentTime();
 
   (async () => {
     try {
@@ -77,7 +70,7 @@ slackEvents.on('app_mention', (event) => {
       const { data } = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
         ...config,
         accept: 'application/vnd.github.v3+json',
-        message: `Add study - ${date}`,
+        message: `Add study - ${dateString}`,
         content: Base64.encode(originalContent + convertToMarkdown(user.profile.real_name, userMessage)),
         sha: file ? file.sha : undefined,
         committer,
