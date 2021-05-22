@@ -24,34 +24,6 @@ app.use(express.json());
 
 const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
 
-app.post('/upload/:uploadType', async (req, res) => {
-  try {
-    const { uploadType } = req.params;
-
-    const {
-      user_id: userId,
-      text,
-    } = req.body;
-    const result = req.body;
-
-    // const { content: { html_url }} = await postStudyMarkdown(slackClient, {
-    //   userId,
-    //   userMessage: text.trim(),
-    //   uploadType,
-    // });
-
-    // res.json({
-    //   response_type: 'in_channel',
-    //   text: `<@${userId}> 업데이트에 성공했어요! :baby: :point_right: <${html_url}|Link>`
-    // });
-  } catch (error) {
-    res.json({
-      response_type: 'in_channel',
-      text: `<@${userId}> 업데이트에 실패했어요 :baby_chick: :point_right: ${error.message}`
-    });
-  }
-});
-
 slackEvents.on('app_mention', async (event) => {
   try {
     const {
