@@ -65,12 +65,12 @@ slackEvents.on('app_mention', (event) => {
 
       await slackClient.chat.postMessage({
         channel: event.channel,
-        text: `<@${event.user}> 성공적으로 업데이트되었습니다. <${uploadedLink}|Link>`,
+        text: `<@${event.user}> 업데이트에 성공했어요! :baby: :point_right: <${uploadedLink}|Link>`,
       });
     } catch (error) {
       await slackClient.chat.postMessage({
         channel: event.channel,
-        text: `<@${event.user}> 업데이트에 실패했습니다: ${error.message}`,
+        text: `<@${event.user}> 업데이트에 실패했어요 :angel: ${error.message}`,
       });
     }
   })();
