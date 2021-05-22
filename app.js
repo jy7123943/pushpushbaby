@@ -33,6 +33,8 @@ const octokit = new Octokit({
   baseUrl: 'https://api.github.com',
 });
 
+app.use('/slack/events', slackEvents.expressMiddleware())
+
 slackEvents.on('app_mention', (event) => {
   const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
   const zonedTime = utcToZonedTime(new Date(), TIME_ZONE);
@@ -101,10 +103,6 @@ slackEvents.on('app_mention', (event) => {
 slackEvents.on('error', console.error);
 
 const port = PORT || 3000;
-
-slackEvents.start(port).then(() => {
-  console.log(`Server listening on port ${port}`);
-});
 
 app.listen(port, () => {
   console.log(`Express server listening on port ${port}`)
