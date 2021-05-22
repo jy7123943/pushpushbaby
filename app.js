@@ -25,6 +25,25 @@ app.use(express.json());
 
 const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
 
+app.post('/weekly', async (req, res) => {
+  try {
+    const {
+      user_id,
+      text,
+    } = req.body;
+
+    res.json({
+      response_type: 'in_channel',
+      text: `<@${user_id}> 업데이트에 성공했어요! :baby: :point_right:`
+    });
+  } catch (error) {
+    res.json({
+      response_type: 'in_channel',
+      text: `<@${user_id}> 업데이트에 실패했어요 :angel: ${error.message}`
+    });
+  }
+});
+
 slackEvents.on('app_mention', async (event) => {
   const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
   const {
