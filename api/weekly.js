@@ -2,11 +2,12 @@ const { Base64 } = require('js-base64');
 const { convertToMarkdown, formatCurrentTime } = require('../utils');
 const { createOrUpdateGitFile, getGitFile } = require('../utils/octokit');
 
-const postWeeklyStudyReport = async ({
-  userName,
-  userEmail,
+const postWeeklyStudyReport = async (slackClient, {
+  userId,
   userMessage,
 }) => {
+  const { user } = await slackClient.users.info({ user: userId });
+
   const {
     year,
     month,
@@ -28,11 +29,11 @@ const postWeeklyStudyReport = async ({
     ...gitConfig,
     accept: 'application/vnd.github.v3+json',
     message: `Add study report - ${dateString}`,
-    content: Base64.encode(originalContent + convertToMarkdown(userName, userMessage)),
+    content: Base64.encode(originalContent + convertToMarkdown(user.profile.real_name, userMessage)),
     sha: file ? file.sha : undefined,
     committer: {
-      name: userName,
-      email: userEmail,
+      name: user.profile.real_name,
+      email: user.profile.email,
     },
   });
 

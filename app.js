@@ -26,13 +26,18 @@ const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
 app.post('/weekly', async (req, res) => {
   try {
     const {
-      user_id,
+      user_id: userId,
       text,
     } = req.body;
 
+    const { content: { html_url }} = await postWeeklyStudyReport(slackClient, {
+      userId,
+      userMessage: text.trim(),
+    });
+
     res.json({
       response_type: 'in_channel',
-      text: `<@${user_id}> 업데이트에 성공했어요! :baby: :point_right:`
+      text: `<@${user_id}> 업데이트에 성공했어요! :baby: :point_right: <${html_url}|Link>`
     });
   } catch (error) {
     res.json({
@@ -46,19 +51,14 @@ slackEvents.on('app_mention', async (event) => {
   try {
     const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
 
-    const { user } = await slackClient.users.info({ user: event.user });
-
-    const result = await postWeeklyStudyReport({
-      userName: user.profile.real_name,
-      userEmail: user.profile.email,
+    const { content: { html_url }} = await postWeeklyStudyReport(slackClient, {
+      userId: event.user,
       userMessage,
     })
 
-    const uploadedLink = result.content.html_url;
-
     await slackClient.chat.postMessage({
       channel: event.channel,
-      text: `<@${event.user}> 업데이트에 성공했어요! :baby: :point_right: <${uploadedLink}|Link>`,
+      text: `<@${event.user}> 업데이트에 성공했어요! :baby: :point_right: <${html_url}|Link>`,
     });
   } catch (error) {
     await slackClient.chat.postMessage({
