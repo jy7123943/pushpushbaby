@@ -37,12 +37,12 @@ app.post('/weekly', async (req, res) => {
 
     res.json({
       response_type: 'in_channel',
-      text: `<@${user_id}> 업데이트에 성공했어요! :baby: :point_right: <${html_url}|Link>`
+      text: `<@${userId}> 업데이트에 성공했어요! :baby: :point_right: <${html_url}|Link>`
     });
   } catch (error) {
     res.json({
       response_type: 'in_channel',
-      text: `<@${user_id}> 업데이트에 실패했어요 :angel: ${error.message}`
+      text: `<@${userId}> 업데이트에 실패했어요 :angel: ${error.message}`
     });
   }
 });
