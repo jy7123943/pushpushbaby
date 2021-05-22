@@ -45,7 +45,7 @@ const getFilePathAndCommitMessage = (uploadType) => {
       };
     case UPLOAD_TYPE.PLAN:
       return {
-        path: `스터디_계획/${year}년_${month}월_${weekOfMonth}주차~4주_계획.md`,
+        path: `스터디_계획/${year}년_${month}월_${weekOfMonth}주차_스터디_계획.md`,
         message: `Upload study plan - ${dateString}`,
       };
     case UPLOAD_TYPE.MEETING:
