@@ -6,7 +6,7 @@ const octokit = new Octokit({
   baseUrl: 'https://api.github.com',
 });
 
-const getFile = async (gitConfig) => {
+const getGitFile = async (gitConfig) => {
   try {
     const { data } = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', gitConfig);
 
@@ -18,13 +18,13 @@ const getFile = async (gitConfig) => {
   }
 };
 
-const createOrUpdateFile = async (gitConfig) => {
+const createOrUpdateGitFile = async (gitConfig) => {
   const { data } = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', gitConfig);
 
   return data;
 };
 
 module.exports = {
-  getFile,
-  createOrUpdateFile,
+  getGitFile,
+  createOrUpdateGitFile,
 };
