@@ -6,6 +6,7 @@ const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
 
 const { postStudyMarkdown } = require('./api');
+const { getValidTextAndType } = require('./utils/validation');
 
 const {
   SLACK_ACCESS_TOKEN,
@@ -31,32 +32,37 @@ app.post('/upload/:uploadType', async (req, res) => {
       user_id: userId,
       text,
     } = req.body;
+    const result = req.body;
 
-    const { content: { html_url }} = await postStudyMarkdown(slackClient, {
-      userId,
-      userMessage: text.trim(),
-      uploadType,
-    });
+    // const { content: { html_url }} = await postStudyMarkdown(slackClient, {
+    //   userId,
+    //   userMessage: text.trim(),
+    //   uploadType,
+    // });
 
-    res.json({
-      response_type: 'in_channel',
-      text: `<@${userId}> 업데이트에 성공했어요! :baby: :point_right: <${html_url}|Link>`
-    });
+    // res.json({
+    //   response_type: 'in_channel',
+    //   text: `<@${userId}> 업데이트에 성공했어요! :baby: :point_right: <${html_url}|Link>`
+    // });
   } catch (error) {
     res.json({
       response_type: 'in_channel',
-      text: `<@${userId}> 업데이트에 실패했어요 :angel: ${error.message}`
+      text: `<@${userId}> 업데이트에 실패했어요 :baby_chick: :point_right: ${error.message}`
     });
   }
 });
 
 slackEvents.on('app_mention', async (event) => {
   try {
-    const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
+    const {
+      uploadType,
+      userMessage,
+    } = getValidTextAndType(event.text);
 
     const { content: { html_url }} = await postStudyMarkdown(slackClient, {
       userId: event.user,
       userMessage,
+      uploadType,
     })
 
     await slackClient.chat.postMessage({
@@ -66,7 +72,7 @@ slackEvents.on('app_mention', async (event) => {
   } catch (error) {
     await slackClient.chat.postMessage({
       channel: event.channel,
-      text: `<@${event.user}> 업데이트에 실패했어요 :angel: ${error.message}`,
+      text: `<@${event.user}> 업데이트에 실패했어요 :baby_chick: :point_right:  ${error.message}`,
     });
   }
 });
