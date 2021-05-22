@@ -9,7 +9,7 @@ const { UPLOAD_TYPE } = require('../constants');
 const postStudyMarkdown = async (slackClient, {
   userId,
   userMessage,
-  uploadType = UPLOAD_TYPE.WEEKLY,
+  uploadType,
 }) => {
   const { user } = await slackClient.users.info({ user: userId });
 
