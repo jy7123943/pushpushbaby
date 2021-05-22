@@ -1,28 +1,29 @@
 require('dotenv').config();
 
 const express = require('express');
-
 const { Base64 } = require('js-base64');
 
 const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
-const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET);
 
 const { convertToMarkdown, formatCurrentTime } = require('./utils');
 const { createOrUpdateGitFile, getGitFile } = require('./octokit');
 
-const app = express();
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
 const {
   SLACK_ACCESS_TOKEN,
+  SLACK_SIGNING_SECRET,
   PORT,
 } = process.env;
 
-const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
+const app = express();
+const slackEvents = createEventAdapter(SLACK_SIGNING_SECRET);
 
 app.use('/slack/events', slackEvents.expressMiddleware());
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
 
 slackEvents.on('app_mention', (event) => {
   const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
