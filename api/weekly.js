@@ -2,7 +2,7 @@ const { Base64 } = require('js-base64');
 const { convertToMarkdown, formatCurrentTime } = require('../utils');
 const { createOrUpdateGitFile, getGitFile } = require('../utils/octokit');
 
-const postWeeklyStudyReport = async (slackClient, {
+const postStudyMarkdown = async (slackClient, {
   userId,
   userMessage,
 }) => {
@@ -41,5 +41,5 @@ const postWeeklyStudyReport = async (slackClient, {
 };
 
 module.exports = {
-  postWeeklyStudyReport,
+  postStudyMarkdown,
 };

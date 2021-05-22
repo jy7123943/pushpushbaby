@@ -5,7 +5,7 @@ const express = require('express');
 const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
 
-const { postWeeklyStudyReport } = require('./api/weekly');
+const { postStudyMarkdown } = require('./api/weekly');
 
 const {
   SLACK_ACCESS_TOKEN,
@@ -30,7 +30,7 @@ app.post('/weekly', async (req, res) => {
       text,
     } = req.body;
 
-    const { content: { html_url }} = await postWeeklyStudyReport(slackClient, {
+    const { content: { html_url }} = await postStudyMarkdown(slackClient, {
       userId,
       userMessage: text.trim(),
     });
@@ -51,7 +51,7 @@ slackEvents.on('app_mention', async (event) => {
   try {
     const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
 
-    const { content: { html_url }} = await postWeeklyStudyReport(slackClient, {
+    const { content: { html_url }} = await postStudyMarkdown(slackClient, {
       userId: event.user,
       userMessage,
     })
