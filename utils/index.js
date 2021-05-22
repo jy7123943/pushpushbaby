@@ -61,15 +61,15 @@ const getFilePathAndCommitMessage = (uploadType) => {
 const parseAppMentionText = (text) => {
   const mentionErasedText = text.replace('<@U0106J68PHP>', '').trim();
 
-  const [_, uploadType, message] = mentionErasedText.split(UPLOAD_TYPE_REGEXP);
-
-  const isValidUploadType = UPLOAD_TYPE_REGEXP.test(uploadType);
+  const isValidUploadType = UPLOAD_TYPE_REGEXP.test(mentionErasedText);
 
   if (!isValidUploadType) {
-    throw new Error('weekly/plan/meeting 중 하나의 명령어를 사용해주세요!');
+    throw new Error('[weekly/plan/meeting 중 하나의 명령어+공백+메시지] 형식으로 입력해주세요!');
   }
 
-  const userMessage = message.trim();
+  const messageIndex = mentionErasedText.search(/\s|\n/);
+  const uploadType = mentionErasedText.slice(0, messageIndex);
+  const userMessage = mentionErasedText.slice(messageIndex + 1);
 
   if (!userMessage) {
     throw new Error('내용을 입력해주세요!');
