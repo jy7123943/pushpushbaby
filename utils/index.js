@@ -40,7 +40,7 @@ const getFilePathAndCommitMessage = (uploadType) => {
   switch (uploadType) {
     case UPLOAD_TYPE.WEEKLY:
       return {
-        path: `스터디_리포트/${year}년_${month}월/${weekOfMonth}주차_스터디.md`,
+        path: `스터디_리포트/${year}년/${month}월/${weekOfMonth}주차_스터디.md`,
         message: `Upload study report - ${dateString}`,
       };
     case UPLOAD_TYPE.PLAN:
