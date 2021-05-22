@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const express = require('express');
+
 const { Octokit } = require('@octokit/core');
 const { Base64 } = require('js-base64');
 
@@ -12,6 +14,10 @@ const { format, utcToZonedTime } = require('date-fns-tz');
 const getWeekOfMonth = require('date-fns/getWeekOfMonth');
 const { toHTML } = require('slack-markdown');
 
+const app = express();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 const TIME_ZONE = 'Asia/Seoul';
 
 const {
@@ -21,6 +27,7 @@ const {
 } = process.env;
 
 const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
+
 const octokit = new Octokit({
   auth: GITHUB_ACCESS_TOKEN,
   baseUrl: 'https://api.github.com',
@@ -102,3 +109,7 @@ const port = PORT || 3000;
 slackEvents.start(port).then(() => {
   console.log(`Server listening on port ${port}`);
 });
+
+app.listen(port, () => {
+  console.log(`Express server listening on port ${port}`)
+})

@@ -27,6 +27,7 @@
     "date-fns": "^2.21.3",
     "date-fns-tz": "^1.1.4",
     "dotenv": "^9.0.2",
+    "express": "^4.17.1",
     "js-base64": "^3.6.0",
     "slack-markdown": "0.0.5"
   }
