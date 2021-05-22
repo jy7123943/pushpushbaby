@@ -51,7 +51,7 @@ const getFilePathAndCommitMessage = (uploadType) => {
     case UPLOAD_TYPE.MEETING:
       return {
         path: `스터디_회고/${year}년_${month}월_${weekOfMonth}주차_스터디_회고.md`,
-        message: `Upload study meeting - ${dateString}`,
+        message: `Upload study meeting log - ${dateString}`,
       };
     default:
       throw new Error(`${JSON.stringify(uploadType)} is not a valid type`);
