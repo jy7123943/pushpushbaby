@@ -6,7 +6,7 @@ const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
 
 const { postStudyMarkdown } = require('./api');
-const { getValidTextAndType } = require('./utils/validation');
+const { parseAppMentionText } = require('./utils');
 
 const {
   SLACK_ACCESS_TOKEN,
@@ -57,7 +57,7 @@ slackEvents.on('app_mention', async (event) => {
     const {
       uploadType,
       userMessage,
-    } = getValidTextAndType(event.text);
+    } = parseAppMentionText(event.text);
 
     const { content: { html_url }} = await postStudyMarkdown(slackClient, {
       userId: event.user,
