@@ -45,15 +45,15 @@ app.post('/weekly', async (req, res) => {
 });
 
 slackEvents.on('app_mention', async (event) => {
-  const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
-  const {
-    year,
-    month,
-    weekOfMonth,
-    dateString,
-  } = formatCurrentTime();
-
   try {
+    const userMessage = event.text.replace('<@U0106J68PHP>', '').trim();
+    const {
+      year,
+      month,
+      weekOfMonth,
+      dateString,
+    } = formatCurrentTime();
+
     const { user } = await slackClient.users.info({ user: event.user });
     const committer = {
       name: user.profile.real_name,
