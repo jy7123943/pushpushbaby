@@ -3,3 +3,5 @@ exports.UPLOAD_TYPE = {
   PLAN: 'plan',
   MEETING: 'meeting',
 };
+
+exports.UPLOAD_TYPE_REGEXP = /^(weekly|plan|meeting)/g;
