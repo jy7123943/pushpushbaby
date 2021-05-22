@@ -1,7 +1,6 @@
-const { convertToMarkdown, formatCurrentTime } = require('./utils');
-const { createOrUpdateGitFile, getGitFile } = require('./utils/octokit');
-
-const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
+const { Base64 } = require('js-base64');
+const { convertToMarkdown, formatCurrentTime } = require('../utils');
+const { createOrUpdateGitFile, getGitFile } = require('../utils/octokit');
 
 const postWeeklyStudyReport = async ({
   userName,
