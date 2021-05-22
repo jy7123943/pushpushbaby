@@ -1,22 +1,22 @@
 const { Base64 } = require('js-base64');
-const { convertToMarkdown, formatCurrentTime } = require('../utils');
+const {
+  convertToMarkdown,
+  getFilePathAndCommitMessage,
+} = require('../utils');
 const { createOrUpdateGitFile, getGitFile } = require('../utils/octokit');
+const { UPLOAD_TYPE } = require('../constants');
 
 const postStudyMarkdown = async (slackClient, {
   userId,
   userMessage,
+  uploadType = UPLOAD_TYPE.WEEKLY,
 }) => {
   const { user } = await slackClient.users.info({ user: userId });
 
-  const {
-    year,
-    month,
-    weekOfMonth,
-    dateString,
-  } = formatCurrentTime();
+  const { path, message } = getFilePathAndCommitMessage(uploadType);
 
   const gitConfig = {
-    path: `스터디_리포트/${year}년_${month}월/${weekOfMonth}주차_스터디.md`,
+    path,
     owner: 'fepocha',
     repo: 'study',
   };
@@ -27,8 +27,8 @@ const postStudyMarkdown = async (slackClient, {
 
   const result = await createOrUpdateGitFile({
     ...gitConfig,
+    message,
     accept: 'application/vnd.github.v3+json',
-    message: `Add study report - ${dateString}`,
     content: Base64.encode(originalContent + convertToMarkdown(user.profile.real_name, userMessage)),
     sha: file ? file.sha : undefined,
     committer: {
