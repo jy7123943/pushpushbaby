@@ -4,7 +4,6 @@ const {
   getFilePathAndCommitMessage,
 } = require('../utils');
 const { createOrUpdateGitFile, getGitFile } = require('../utils/octokit');
-const { UPLOAD_TYPE } = require('../constants');
 
 const postStudyMarkdown = async (slackClient, {
   userId,
