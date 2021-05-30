@@ -51,7 +51,7 @@ const handleAppMention = (event) => {
   }
 };
 
-slackEvents.on('app_mention', async (event) => {
+slackEvents.on('app_mention', (event) => {
   EventQueue.set(event);
 
   setTimeout(async () => {
