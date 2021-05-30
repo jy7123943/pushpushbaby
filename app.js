@@ -7,6 +7,7 @@ const { createEventAdapter } = require('@slack/events-api');
 
 const { postStudyMarkdown } = require('./api');
 const { parseAppMentionText } = require('./utils');
+const { createEventQueue } = require('./utils/event-queue');
 
 const {
   SLACK_ACCESS_TOKEN,
@@ -23,8 +24,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
+const EventQueue = createEventQueue();
 
-slackEvents.on('app_mention', async (event) => {
+const handleAppMention = async (event) => {
   try {
     const {
       uploadType,
@@ -47,6 +49,20 @@ slackEvents.on('app_mention', async (event) => {
       text: `<@${event.user}> 업데이트에 실패했어요 :baby_chick: :point_right: ${error.message}`,
     });
   }
+};
+
+slackEvents.on('app_mention', async (event) => {
+  EventQueue.set(event);
+
+  await slackClient.chat.postEphemeral({
+    channel: event.channel,
+    user: event.user,
+    text: '잠시만 기다려주세요!',
+  });
+
+  setTimeout(async () => {
+    await Promise.all(EventQueue.mapEvent(handleAppMention));
+  }, 10000);
 });
 
 slackEvents.on('error', console.error);
