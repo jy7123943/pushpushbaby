@@ -62,7 +62,7 @@ slackEvents.on('app_mention', async (event) => {
 
   setTimeout(async () => {
     await Promise.all(EventQueue.mapEvent(handleAppMention));
-  }, 10000);
+  }, 20000);
 });
 
 slackEvents.on('error', console.error);
