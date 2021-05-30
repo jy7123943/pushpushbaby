@@ -10,11 +10,11 @@ const createEventQueue = () => {
 
       events.set(event.text, event);
     },
-    mapPromise: function (promiseCallback) {
+    mapEvent: function (eventHandler) {
       const eventPromises = [];
 
       events.forEach((event, key) => {
-        eventPromises.push(promiseCallback(event));
+        eventPromises.push(eventHandler(event));
         events.delete(key);
       });
 

@@ -55,7 +55,7 @@ slackEvents.on('app_mention', async (event) => {
   EventQueue.set(event);
 
   setTimeout(async () => {
-    await Promise.all(EventQueue.mapPromise(handleAppMention));
+    await Promise.all(EventQueue.mapEvent(handleAppMention));
   }, 10000);
 });
 
