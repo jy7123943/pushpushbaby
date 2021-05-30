@@ -26,7 +26,7 @@ app.use(express.json());
 const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
 const EventQueue = createEventQueue();
 
-const handleAppMention = (event) => {
+const handleAppMention = async (event) => {
   try {
     const {
       uploadType,
