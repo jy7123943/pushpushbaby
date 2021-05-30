@@ -26,7 +26,7 @@ app.use(express.json());
 const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
 const EventQueue = createEventQueue();
 
-const appMentionEvent = (event) => {
+const handleAppMention = (event) => {
   try {
     const {
       uploadType,
@@ -55,7 +55,7 @@ slackEvents.on('app_mention', async (event) => {
   EventQueue.set(event);
 
   setTimeout(async () => {
-    await Promise.all(EventQueue.mapPromise(appMentionEvent));
+    await Promise.all(EventQueue.mapPromise(handleAppMention));
   }, 10000);
 });
 
