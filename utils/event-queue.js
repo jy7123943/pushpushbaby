@@ -15,11 +15,14 @@ const createEventQueue = () => {
 
       events.forEach((event, key) => {
         eventPromises.push(eventHandler(event));
-        events.delete(key);
+
+        setTimeout(() => {
+          events.delete(key);
+        }, 60000);
       });
 
       return eventPromises;
-    }
+    },
   };
 };
 

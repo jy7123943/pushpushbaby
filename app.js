@@ -52,6 +52,8 @@ const handleAppMention = async (event) => {
 };
 
 slackEvents.on('app_mention', async (event) => {
+  if (EventQueue.has(event)) return;
+
   EventQueue.set(event);
 
   await slackClient.chat.postEphemeral({
@@ -62,7 +64,7 @@ slackEvents.on('app_mention', async (event) => {
 
   setTimeout(async () => {
     await Promise.all(EventQueue.mapEvent(handleAppMention));
-  }, 20000);
+  }, 10000);
 });
 
 slackEvents.on('error', console.error);
