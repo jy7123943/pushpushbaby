@@ -11,7 +11,7 @@ const createEventQueue = () => {
 
       events.set(event.text, event);
     },
-    mapEvent: function (eventHandler) {
+    createPromises: function (eventHandler) {
       const eventPromises = [];
 
       events.forEach((event, key) => {
