@@ -1,9 +1,10 @@
 const createEventQueue = () => {
   const events = new Map();
+  const deleteList = new Map();
 
   return {
     has: function (event) {
-      return events.has(event.text);
+      return events.has(event.text) || deleteList.has(event.text);
     },
     set: function (event) {
       if (this.has(event)) return;
@@ -15,10 +16,12 @@ const createEventQueue = () => {
 
       events.forEach((event, key) => {
         eventPromises.push(eventHandler(event));
+        deleteList.set(key, event);
+        events.delete(key);
 
         setTimeout(() => {
-          events.delete(key);
-        }, 60000);
+          deleteList.delete(key);
+        }, 120000);
       });
 
       return eventPromises;
