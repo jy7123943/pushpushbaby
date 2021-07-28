@@ -24,7 +24,7 @@ app.use(express.json());
 app.use('/slack/events', slackEvents.expressMiddleware());
 app.use('/slack/help', (req, res) => {
   res.json({
-    text: '안녕하세요 :wave: 필요할 때 언제든지 `/help` 커멘드로 저를 불러주세요. :baby:\n'
+    text: '안녕하세요 :wave: 필요할 때 언제든지 `/pushpushbaby` 커멘드로 저를 불러주세요. :baby:\n'
       + ':one: `@pushpushbaby weekly{공백 1개 or 줄바꿈}{스터디 내용}`\n'
       + '> 스터디 주간 리포트를 업로드합니다. \n'
       + ':two: `@pushpushbaby plan{공백 1개 or 줄바꿈}{스터디 내용}`\n'
