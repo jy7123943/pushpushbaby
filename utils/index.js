@@ -69,7 +69,7 @@ const parseAppMentionText = (text) => {
   const isValidUploadType = UPLOAD_TYPE_REGEXP.test(mentionErasedText);
 
   if (!isValidUploadType) {
-    throw new Error('[weekly/plan/meeting/translate 중 하나의 명령어+공백+메시지] 형식으로 입력해주세요!');
+    throw new Error('[weekly/plan/meeting/translate 중 하나의 명령어+공백(또는 줄바꿈)+메시지] 형식으로 입력해주세요!');
   }
 
   const messageIndex = mentionErasedText.search(/\s|\n/);
