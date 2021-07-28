@@ -73,8 +73,8 @@ const parseAppMentionText = (text) => {
   }
 
   const messageIndex = mentionErasedText.search(/\s|\n/);
-  const uploadType = mentionErasedText.slice(0, messageIndex);
-  const userMessage = mentionErasedText.slice(messageIndex + 1);
+  const uploadType = mentionErasedText.slice(0, messageIndex).trim();
+  const userMessage = mentionErasedText.slice(messageIndex + 1).trim();
 
   if (!userMessage) {
     throw new Error('내용을 입력해주세요!');
