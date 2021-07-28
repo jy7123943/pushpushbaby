@@ -19,6 +19,19 @@ const app = express();
 const slackEvents = createEventAdapter(SLACK_SIGNING_SECRET);
 
 app.use('/slack/events', slackEvents.expressMiddleware());
+app.use('/slack/help', (req, res) => {
+  res.json({
+    text: '안녕하세요 :wave: 저는 pushpushbaby 입니다. 필요할 때 언제든지 `/help` 커멘드로 저를 불러주세요.\n'
+      + ':one: `@pushpushbaby weekly{공백 1개 or 줄바꿈}{스터디 내용}`\n'
+      + '> 스터디 주간 리포트를 업로드합니다. \n'
+      + ':two: `@pushpushbaby plan{공백 1개 or 줄바꿈}{스터디 내용}`\n'
+      + '> 스터디 계획을 업로드합니다. \n'
+      + ':three: `@pushpushbaby meeting{공백 1개 or 줄바꿈}{스터디 내용}`\n'
+      + '> 스터디 미팅 로그를 업로드합니다. \n'
+      + ':four: `@pushpushbaby translate{공백 1개 or 줄바꿈}{스터디 내용}`\n'
+      + '> 영어 번역 스터디 주간 리포트를 업로드합니다. \n',
+  });
+});
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
