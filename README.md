@@ -30,6 +30,7 @@ Slack 프로필의 Full name란을 Github name으로 변경해주세요.
   - `plan`: 스터디 계획 업로드
   - `weekly`: 스터디 주간 리포트 업로드
   - `meeting`: 스터디 모임 후 발표 자료 및 회고 업로드
+  - `translate`: 번역 스터디 주간 리포트 업로드
 
 ![weekly](https://user-images.githubusercontent.com/32149561/119219378-42dc1800-bb20-11eb-85c1-8b7455903a4e.png)
 

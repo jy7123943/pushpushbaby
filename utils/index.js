@@ -19,7 +19,7 @@ const formatCurrentTime = () => {
     locale,
     weekStartsOn: 1,
   });
-  const dateString = format(zonedTime, 'yyyy-MM-dd HH:mm', { locale });
+  const dateString = format(zonedTime, 'yy-MM-dd HH:mm', { locale });
 
   return {
     year,
@@ -53,6 +53,11 @@ const getFilePathAndCommitMessage = (uploadType) => {
         path: `스터디_회고/${year}년_${month}월_${weekOfMonth}주차_스터디_회고.md`,
         message: `Upload study meeting log - ${dateString}`,
       };
+    case UPLOAD_TYPE.TRANSLATE:
+      return {
+        path: `번역_스터디_리포트/${year}년/${month}월/${weekOfMonth}주차_번역_스터디.md`,
+        message: `Upload translation group study report - ${dateString}`,
+      };
     default:
       throw new Error(`${JSON.stringify(uploadType)} is not a valid type`);
   }
@@ -64,7 +69,7 @@ const parseAppMentionText = (text) => {
   const isValidUploadType = UPLOAD_TYPE_REGEXP.test(mentionErasedText);
 
   if (!isValidUploadType) {
-    throw new Error('[weekly/plan/meeting 중 하나의 명령어+공백+메시지] 형식으로 입력해주세요!');
+    throw new Error('[weekly/plan/meeting/translate 중 하나의 명령어+공백+메시지] 형식으로 입력해주세요!');
   }
 
   const messageIndex = mentionErasedText.search(/\s|\n/);
