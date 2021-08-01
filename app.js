@@ -18,9 +18,6 @@ const {
 const app = express();
 const slackEvents = createEventAdapter(SLACK_SIGNING_SECRET);
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
 app.use('/slack/events', slackEvents.expressMiddleware());
 app.use('/slack/help', (req, res) => {
   res.json({
@@ -35,6 +32,9 @@ app.use('/slack/help', (req, res) => {
       + '> 영어 번역 스터디 주간 리포트를 업로드합니다. \n',
   });
 });
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
 const EventQueue = createEventQueue();
