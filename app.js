@@ -6,7 +6,7 @@ const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
 
 const { postStudyMarkdown } = require('./api');
-const { parseAppMentionText } = require('./utils');
+const { formatCurrentTime, parseAppMentionText } = require('./utils');
 const { createEventQueue } = require('./utils/event-queue');
 
 const {
@@ -30,6 +30,14 @@ app.use('/slack/help', (req, res) => {
       + '> 스터디 미팅 로그를 업로드합니다. \n'
       + ':four: `@pushpushbaby translate{공백 1개 or 줄바꿈}{스터디 내용}`\n'
       + '> 영어 번역 스터디 주간 리포트를 업로드합니다. \n',
+  });
+});
+app.use('/slack/skip', (req, res) => {
+  const { month, date } = formatCurrentTime();
+
+  res.json({
+    response_type: 'in_channel',
+    text: `<@${req.user_id}>님이 ${month}월 ${date}일에 스터디 skip권을 사용합니다. :male_fairy:`,
   });
 });
 

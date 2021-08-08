@@ -15,6 +15,7 @@ const formatCurrentTime = () => {
   const zonedTime = utcToZonedTime(new Date(), TIME_ZONE);
   const year = zonedTime.getFullYear();
   const month = zonedTime.getMonth() + 1;
+  const date = zonedTime.getDate();
   const weekOfMonth = getWeekOfMonth(zonedTime, {
     locale,
     weekStartsOn: 1,
@@ -24,6 +25,7 @@ const formatCurrentTime = () => {
   return {
     year,
     month,
+    date,
     weekOfMonth,
     dateString,
   };
