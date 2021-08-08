@@ -19,6 +19,10 @@ const app = express();
 const slackEvents = createEventAdapter(SLACK_SIGNING_SECRET);
 
 app.use('/slack/events', slackEvents.expressMiddleware());
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.use('/slack/help', (req, res) => {
   res.json({
     text: '안녕하세요 :wave: 필요할 때 언제든지 `/pushpushbaby` 커멘드로 저를 불러주세요. :baby:\n'
@@ -37,12 +41,9 @@ app.use('/slack/skip', (req, res) => {
 
   res.json({
     response_type: 'in_channel',
-    text: `<@${req.user_id}>님이 ${month}월 ${date}일에 스터디 skip권을 사용합니다. :male_fairy:`,
+    text: `<@${req.body.user_id}>님이 ${month}월 ${date}일에 스터디 skip권을 사용합니다. :male_fairy:`,
   });
 });
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
 const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
 const EventQueue = createEventQueue();
