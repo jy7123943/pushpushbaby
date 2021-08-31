@@ -5,4 +5,4 @@ exports.UPLOAD_TYPE = {
   TRANSLATE: 'translate',
 };
 
-exports.UPLOAD_TYPE_REGEXP = /^(weekly|plan|meeting|translate)(\s|\n)(.*)/s;
+exports.UPLOAD_TYPE_REGEXP = /weekly|plan|meeting|translate/;
