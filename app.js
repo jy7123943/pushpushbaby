@@ -49,44 +49,44 @@ const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
 const EventQueue = createEventQueue();
 
 const handleAppMention = async (event) => {
+  const {
+    uploadType,
+    userMessage,
+  } = parseAppMentionText(event.text);
+
+  const { content: { html_url }} = await postStudyMarkdown(slackClient, {
+    userId: event.user,
+    userMessage,
+    uploadType,
+  })
+
+  await slackClient.chat.postMessage({
+    channel: event.channel,
+    text: `<@${event.user}> 업데이트에 성공했어요! :baby: :point_right: <${html_url}|Link>`,
+  });
+};
+
+slackEvents.on('app_mention', async (event) => {
   try {
-    const {
-      uploadType,
-      userMessage,
-    } = parseAppMentionText(event.text);
+    if (EventQueue.has(event)) return;
 
-    const { content: { html_url }} = await postStudyMarkdown(slackClient, {
-      userId: event.user,
-      userMessage,
-      uploadType,
-    })
-
-    await slackClient.chat.postMessage({
+    await slackClient.chat.postEphemeral({
       channel: event.channel,
-      text: `<@${event.user}> 업데이트에 성공했어요! :baby: :point_right: <${html_url}|Link>`,
+      user: event.user,
+      text: '잠시만 기다려주세요!',
     });
+
+    EventQueue.set(event);
+
+    await handleAppMention(event);
+
+    EventQueue.clear(event);
   } catch (error) {
     await slackClient.chat.postMessage({
       channel: event.channel,
       text: `<@${event.user}> 에러가 발생했어요! :baby_chick: :point_right: ${error.message}`,
     });
   }
-};
-
-slackEvents.on('app_mention', async (event) => {
-  if (EventQueue.has(event)) return;
-
-  await slackClient.chat.postEphemeral({
-    channel: event.channel,
-    user: event.user,
-    text: '잠시만 기다려주세요!',
-  });
-
-  EventQueue.set(event);
-
-  await handleAppMention(event);
-
-  EventQueue.clear(event);
 });
 
 slackEvents.on('error', console.error);

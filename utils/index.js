@@ -87,8 +87,8 @@ const parseAppMentionText = (text) => {
       uploadType,
       userMessage,
     };
-  } catch (e) {
-    throw e;
+  } catch (error) {
+    throw error;
   }
 };
 
