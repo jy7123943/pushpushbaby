@@ -84,9 +84,9 @@ slackEvents.on('app_mention', async (event) => {
     text: '잠시만 기다려주세요!',
   });
 
-  setTimeout(async () => {
-    await Promise.all(EventQueue.createPromises(handleAppMention));
-  }, 1000);
+  await handleAppMention(event);
+
+  EventQueue.clear(event);
 });
 
 slackEvents.on('error', console.error);
