@@ -76,13 +76,13 @@ const handleAppMention = async (event) => {
 slackEvents.on('app_mention', async (event) => {
   if (EventQueue.has(event)) return;
 
-  EventQueue.set(event);
-
   await slackClient.chat.postEphemeral({
     channel: event.channel,
     user: event.user,
     text: '잠시만 기다려주세요!',
   });
+
+  EventQueue.set(event);
 
   await handleAppMention(event);
 
