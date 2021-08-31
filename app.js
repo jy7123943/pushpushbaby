@@ -48,7 +48,7 @@ app.use('/slack/skip', (req, res) => {
 const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
 const EventQueue = createEventQueue();
 
-const handleAppMention = async (event) => {
+const uploadToGithub = async (event) => {
   const {
     uploadType,
     userMessage,
@@ -58,12 +58,9 @@ const handleAppMention = async (event) => {
     userId: event.user,
     userMessage,
     uploadType,
-  })
-
-  await slackClient.chat.postMessage({
-    channel: event.channel,
-    text: `<@${event.user}> 업데이트에 성공했어요! :baby: :point_right: <${html_url}|Link>`,
   });
+
+  return html_url;
 };
 
 slackEvents.on('app_mention', async (event) => {
@@ -78,7 +75,12 @@ slackEvents.on('app_mention', async (event) => {
 
     EventQueue.set(event);
 
-    await handleAppMention(event);
+    const pageUrl = await uploadToGithub(event);
+
+    await slackClient.chat.postMessage({
+      channel: event.channel,
+      text: `<@${event.user}> 업데이트에 성공했어요! :baby: :point_right: <${pageUrl}|Link>`,
+    });
 
     EventQueue.clear(event);
   } catch (error) {
