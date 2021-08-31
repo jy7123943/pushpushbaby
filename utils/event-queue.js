@@ -8,7 +8,7 @@ const createEventQueue = () => {
     set: function (event) {
       if (this.has(event)) return;
 
-      events.set(key, event);
+      events.set(event.text, event);
     },
     clear: function (event, delay = 120000) {
       if (!this.has(event)) return;
