@@ -7,7 +7,7 @@ const { createEventAdapter } = require('@slack/events-api');
 
 const { postStudyMarkdown } = require('./api');
 const { formatCurrentTime, parseAppMentionText } = require('./utils');
-const { createEventMap } = require('./utils/event-queue');
+const { createEventMap } = require('./utils/event-map');
 
 const {
   SLACK_ACCESS_TOKEN,
@@ -67,13 +67,13 @@ slackEvents.on('app_mention', async (event) => {
   try {
     if (EventMap.has(event)) return;
 
+    EventMap.set(event);
+
     await slackClient.chat.postEphemeral({
       channel: event.channel,
       user: event.user,
       text: '잠시만 기다려주세요!',
     });
-
-    EventMap.set(event);
 
     const pageUrl = await uploadToGithub(event);
 
