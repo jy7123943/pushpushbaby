@@ -5,7 +5,7 @@ const express = require('express');
 const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
 
-const { createOrUpdateStudyMarkdown } = require('./api');
+const { createOrUpdateMarkdown } = require('./api');
 const { formatCurrentTime, parseAppMentionText } = require('./utils');
 const { createEventMap } = require('./utils/event-map');
 
@@ -54,7 +54,7 @@ const uploadToGithub = async (event) => {
     userMessage,
   } = parseAppMentionText(event.text);
 
-  const { content: { html_url }} = await createOrUpdateStudyMarkdown(slackClient, {
+  const { content: { html_url }} = await createOrUpdateMarkdown(slackClient, {
     userId: event.user,
     userMessage,
     uploadType,

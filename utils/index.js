@@ -5,8 +5,19 @@ const { UPLOAD_TYPE, UPLOAD_TYPE_REGEXP } = require('../constants');
 
 const { toHTML } = require('slack-markdown');
 
-const convertToMarkdown = (userName, message) => (
+const convertToStudyMarkdown = (userName, message) => (
   `<h2>${userName}</h2>` + toHTML(message)
+);
+const convertToInitialLinkMarkdown = (message) => {
+  const { year, month } = formatCurrentTime();
+  return (
+    `<h1>${year}-${month} Links</h1>`
+    + `<ul><li>${toHTML(message)}</li></ul>`
+  );
+};
+const convertToLinkMarkdown = (originalContent, message) => (
+  originalContent.replace('</ul>', '')
+  + `<li>${toHTML(message)}</li></ul>`
 );
 
 const TIME_ZONE = 'Asia/Seoul';
@@ -94,7 +105,9 @@ const parseAppMentionText = (text) => {
 };
 
 module.exports = {
-  convertToMarkdown,
+  convertToStudyMarkdown,
+  convertToInitialLinkMarkdown,
+  convertToLinkMarkdown,
   formatCurrentTime,
   getFilePathAndCommitMessage,
   parseAppMentionText,
