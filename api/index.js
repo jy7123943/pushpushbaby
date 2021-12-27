@@ -5,7 +5,7 @@ const {
 } = require('../utils');
 const { createOrUpdateGitFile, getGitFile } = require('../utils/octokit');
 
-const postStudyMarkdown = async (slackClient, {
+const createOrUpdateStudyMarkdown = async (slackClient, {
   userId,
   userMessage,
   uploadType,
@@ -40,5 +40,5 @@ const postStudyMarkdown = async (slackClient, {
 };
 
 module.exports = {
-  postStudyMarkdown,
+  createOrUpdateStudyMarkdown,
 };
