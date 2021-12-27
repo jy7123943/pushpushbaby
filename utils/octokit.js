@@ -3,7 +3,8 @@ const { GITHUB_ACCESS_TOKEN } = process.env;
 
 const octokit = new Octokit({
   auth: GITHUB_ACCESS_TOKEN,
-  baseUrl: 'https://api.github.com',
+  baseUrl: 'https://github.acme-inc.com/api/v3',
+  timeZone: 'Asia/Seoul',
 });
 
 const getGitFile = async (gitConfig) => {
