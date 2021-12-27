@@ -1,4 +1,4 @@
-const createEventMemo = () => {
+const createEventMap = () => {
   const events = new Map();
 
   return {
@@ -21,5 +21,5 @@ const createEventMemo = () => {
 };
 
 module.exports = {
-  createEventMemo,
+  createEventMap,
 };

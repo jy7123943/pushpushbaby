@@ -7,7 +7,7 @@ const { createEventAdapter } = require('@slack/events-api');
 
 const { postStudyMarkdown } = require('./api');
 const { formatCurrentTime, parseAppMentionText } = require('./utils');
-const { createEventMemo } = require('./utils/event-queue');
+const { createEventMap } = require('./utils/event-queue');
 
 const {
   SLACK_ACCESS_TOKEN,
@@ -46,7 +46,7 @@ app.use('/slack/skip', (req, res) => {
 });
 
 const slackClient = new WebClient(SLACK_ACCESS_TOKEN);
-const EventMemo = createEventMemo();
+const EventMap = createEventMap();
 
 const uploadToGithub = async (event) => {
   const {
@@ -65,7 +65,7 @@ const uploadToGithub = async (event) => {
 
 slackEvents.on('app_mention', async (event) => {
   try {
-    if (EventMemo.has(event)) return;
+    if (EventMap.has(event)) return;
 
     await slackClient.chat.postEphemeral({
       channel: event.channel,
@@ -73,7 +73,7 @@ slackEvents.on('app_mention', async (event) => {
       text: '잠시만 기다려주세요!',
     });
 
-    EventMemo.set(event);
+    EventMap.set(event);
 
     const pageUrl = await uploadToGithub(event);
 
@@ -82,7 +82,7 @@ slackEvents.on('app_mention', async (event) => {
       text: `<@${event.user}> 업데이트에 성공했어요! :baby: :point_right: <${pageUrl}|Link>`,
     });
 
-    EventMemo.clear(event);
+    EventMap.clear(event);
   } catch (error) {
     await slackClient.chat.postMessage({
       channel: event.channel,
