@@ -3,6 +3,7 @@ exports.UPLOAD_TYPE = {
   PLAN: 'plan',
   MEETING: 'meeting',
   TRANSLATE: 'translate',
+  LINKS: 'links',
 };
 
-exports.UPLOAD_TYPE_REGEXP = /weekly|plan|meeting|translate/;
+exports.UPLOAD_TYPE_REGEXP = /weekly|plan|meeting|translate|links/;

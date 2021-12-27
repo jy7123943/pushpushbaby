@@ -5,8 +5,19 @@ const { UPLOAD_TYPE, UPLOAD_TYPE_REGEXP } = require('../constants');
 
 const { toHTML } = require('slack-markdown');
 
-const convertToMarkdown = (userName, message) => (
+const convertToStudyMarkdown = (userName, message) => (
   `<h2>${userName}</h2>` + toHTML(message)
+);
+const convertToInitialLinkMarkdown = (message) => {
+  const { year, month } = formatCurrentTime();
+  return (
+    `<h1>${year}-${month} Links</h1>`
+    + `<ul><li>${toHTML(message)}</li></ul>`
+  );
+};
+const convertToLinkMarkdown = (originalContent, message) => (
+  originalContent.replace('</ul>', '')
+  + `<li>${toHTML(message)}</li></ul>`
 );
 
 const TIME_ZONE = 'Asia/Seoul';
@@ -60,6 +71,11 @@ const getFilePathAndCommitMessage = (uploadType) => {
         path: `번역_스터디_리포트/${year}년/${month}월/${weekOfMonth}주차_번역_스터디.md`,
         message: `Upload translation group study report - ${dateString}`,
       };
+    case UPLOAD_TYPE.LINKS:
+      return {
+        path: `${year}년/${month}월.md`,
+        message: `Upload link - ${dateString}`,
+      };
     default:
       throw new Error(`${JSON.stringify(uploadType)} is not a valid type`);
   }
@@ -75,7 +91,7 @@ const parseAppMentionText = (text) => {
   const isValidUploadType = UPLOAD_TYPE_REGEXP.test(uploadType);
 
   if (!isValidUploadType) {
-    throw new Error('[weekly/plan/meeting/translate 중 하나의 명령어+공백(또는 줄바꿈)+메시지] 형식으로 입력해주세요!');
+    throw new Error('[weekly/plan/meeting/translate/links 중 하나의 명령어+공백(또는 줄바꿈)+메시지] 형식으로 입력해주세요!');
   }
 
   if (!userMessage) {
@@ -89,7 +105,9 @@ const parseAppMentionText = (text) => {
 };
 
 module.exports = {
-  convertToMarkdown,
+  convertToStudyMarkdown,
+  convertToInitialLinkMarkdown,
+  convertToLinkMarkdown,
   formatCurrentTime,
   getFilePathAndCommitMessage,
   parseAppMentionText,

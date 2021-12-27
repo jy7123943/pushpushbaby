@@ -5,7 +5,7 @@ const express = require('express');
 const { WebClient } = require('@slack/web-api');
 const { createEventAdapter } = require('@slack/events-api');
 
-const { createOrUpdateStudyMarkdown } = require('./api');
+const { createOrUpdateMarkdown } = require('./api');
 const { formatCurrentTime, parseAppMentionText } = require('./utils');
 const { createEventMap } = require('./utils/event-map');
 
@@ -33,7 +33,9 @@ app.use('/slack/help', (req, res) => {
       + ':three: `@pushpushbaby meeting{공백 1개 or 줄바꿈}{스터디 내용}`\n'
       + '> 스터디 미팅 로그를 업로드합니다. \n'
       + ':four: `@pushpushbaby translate{공백 1개 or 줄바꿈}{스터디 내용}`\n'
-      + '> 영어 번역 스터디 주간 리포트를 업로드합니다. \n',
+      + '> 영어 번역 스터디 주간 리포트를 업로드합니다. \n'
+      + ':five: `@pushpushbaby links{공백 1개 or 줄바꿈}{링크}{줄바꿈}{설명}`\n'
+      + '> 링크를 업로드합니다. \n',
   });
 });
 app.use('/slack/skip', (req, res) => {
@@ -54,7 +56,7 @@ const uploadToGithub = async (event) => {
     userMessage,
   } = parseAppMentionText(event.text);
 
-  const { content: { html_url }} = await createOrUpdateStudyMarkdown(slackClient, {
+  const { content: { html_url }} = await createOrUpdateMarkdown(slackClient, {
     userId: event.user,
     userMessage,
     uploadType,
