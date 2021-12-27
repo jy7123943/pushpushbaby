@@ -33,7 +33,9 @@ app.use('/slack/help', (req, res) => {
       + ':three: `@pushpushbaby meeting{공백 1개 or 줄바꿈}{스터디 내용}`\n'
       + '> 스터디 미팅 로그를 업로드합니다. \n'
       + ':four: `@pushpushbaby translate{공백 1개 or 줄바꿈}{스터디 내용}`\n'
-      + '> 영어 번역 스터디 주간 리포트를 업로드합니다. \n',
+      + '> 영어 번역 스터디 주간 리포트를 업로드합니다. \n'
+      + ':five: `@pushpushbaby links{공백 1개 or 줄바꿈}{링크}{줄바꿈}{설명}`\n'
+      + '> 링크를 업로드합니다. \n',
   });
 });
 app.use('/slack/skip', (req, res) => {
