@@ -22,8 +22,8 @@ const convertToLinkMarkdown = (originalContent, message) => (
 const convertToInitialTilMarkdown = (message) => {
   const { year, month, date } = formatCurrentTime();
   return (
-    `<h1>${year}-${month} Links</h1>`
-    + `<h3>${date}일</h3>`
+    `<h1>${year}-${month}</h1>`
+    + `<h3>Day ${date}</h3>`
     + `<p>${toHTML(message)}</p>`
   );
 };
