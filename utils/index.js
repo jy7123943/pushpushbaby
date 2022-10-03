@@ -85,10 +85,14 @@ const getFilePathAndCommitMessage = (uploadType) => {
         message: `Upload translation group study report - ${dateString}`,
       };
     case UPLOAD_TYPE.LINKS:
-    case UPLOAD_TYPE.TIL:
       return {
         path: `${year}년/${month}월.md`,
         message: `Upload link - ${dateString}`,
+      };
+    case UPLOAD_TYPE.TIL:
+      return {
+        path: `${year}년/${month}월.md`,
+        message: `Upload til - ${dateString}`,
       };
     default:
       throw new Error(`${JSON.stringify(uploadType)} is not a valid type`);
