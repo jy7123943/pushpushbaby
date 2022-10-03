@@ -19,6 +19,19 @@ const convertToLinkMarkdown = (originalContent, message) => (
   originalContent.replace('</ul>', '')
   + `<li>${toHTML(message)}</li></ul>`
 );
+const convertToInitialTilMarkdown = (message) => {
+  const { year, month, date } = formatCurrentTime();
+  return (
+    `<h1>${year}-${month} Links</h1>`
+    + `<h3>${date}일</h3>`
+    + `<p>${toHTML(message)}</p>`
+  );
+};
+const convertToTilMarkdown = (originalContent, message) => (
+  originalContent
+  + `<hr/><h3>${date}일</h3>`
+  + `<p>${toHTML(message)}</p>`
+);
 
 const TIME_ZONE = 'Asia/Seoul';
 
@@ -72,6 +85,7 @@ const getFilePathAndCommitMessage = (uploadType) => {
         message: `Upload translation group study report - ${dateString}`,
       };
     case UPLOAD_TYPE.LINKS:
+    case UPLOAD_TYPE.TIL:
       return {
         path: `${year}년/${month}월.md`,
         message: `Upload link - ${dateString}`,
@@ -108,6 +122,8 @@ module.exports = {
   convertToStudyMarkdown,
   convertToInitialLinkMarkdown,
   convertToLinkMarkdown,
+  convertToInitialTilMarkdown,
+  convertToTilMarkdown,
   formatCurrentTime,
   getFilePathAndCommitMessage,
   parseAppMentionText,

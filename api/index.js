@@ -3,6 +3,8 @@ const { UPLOAD_TYPE } = require('../constants');
 const {
   convertToStudyMarkdown,
   convertToInitialLinkMarkdown,
+  convertToInitialTilMarkdown,
+  convertToTilMarkdown,
   convertToLinkMarkdown,
   getFilePathAndCommitMessage,
 } = require('../utils');
@@ -22,16 +24,29 @@ const getLinkContent = ({ file, userMessage }) => {
   return Base64.encode(content);
 };
 
+const getTilContent = ({ file, userMessage }) => {
+  const content = file
+    ? convertToTilMarkdown(Base64.decode(file.content), userMessage)
+    : convertToInitialTilMarkdown(userMessage);
+
+  return Base64.encode(content);
+};
+
 const createOrUpdateMarkdown = async (slackClient, {
   userId,
   userMessage,
   uploadType,
 }) => {
   const isLinkType = uploadType === UPLOAD_TYPE.LINKS;
+  const isTilType = uploadType === UPLOAD_TYPE.TIL;
   const { user } = await slackClient.users.info({ user: userId });
 
   const { path, message } = getFilePathAndCommitMessage(uploadType);
-  const gitConfig = {
+  const gitConfig = isTilType ? {
+    path,
+    owner: 'jy7123943',
+    repo: 'til',
+  } : {
     path,
     owner: 'fepocha',
     repo: isLinkType ? 'links' : 'study',
@@ -39,9 +54,11 @@ const createOrUpdateMarkdown = async (slackClient, {
 
   const file = await getGitFile(gitConfig);
 
-  const content = isLinkType
-    ? getLinkContent({ file, userMessage })
-    : getStudyContent({ file, userName: user.profile.real_name, userMessage })
+  const content = isTilType
+    ? getTilContent({ file, userMessage })
+    : isLinkType
+      ? getLinkContent({ file, userMessage })
+      : getStudyContent({ file, userName: user.profile.real_name, userMessage })
 
   const result = await createOrUpdateGitFile({
     ...gitConfig,
@@ -50,8 +67,8 @@ const createOrUpdateMarkdown = async (slackClient, {
     content,
     sha: file ? file.sha : undefined,
     committer: {
-      name: user.profile.real_name,
-      email: user.profile.email,
+      name: isTilType ? 'jy7123943' : user.profile.real_name,
+      email: isTilType ? 'jy7123943@gmail.com' : user.profile.email,
     },
   });
 
