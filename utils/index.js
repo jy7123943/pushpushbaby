@@ -31,7 +31,7 @@ const convertToTilMarkdown = (originalContent, message) => {
   const { date } = formatCurrentTime();
   return (
     originalContent
-    + `<hr/><h3>${date}일</h3>`
+    + `<hr/><h3>Day ${date}</h3>`
     + `<p>${toHTML(message)}</p>`
   );
 };
