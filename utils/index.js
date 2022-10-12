@@ -27,11 +27,14 @@ const convertToInitialTilMarkdown = (message) => {
     + `<p>${toHTML(message)}</p>`
   );
 };
-const convertToTilMarkdown = (originalContent, message) => (
-  originalContent
-  + `<hr/><h3>${date}일</h3>`
-  + `<p>${toHTML(message)}</p>`
-);
+const convertToTilMarkdown = (originalContent, message) => {
+  const { date } = formatCurrentTime();
+  return (
+    originalContent
+    + `<hr/><h3>${date}일</h3>`
+    + `<p>${toHTML(message)}</p>`
+  );
+};
 
 const TIME_ZONE = 'Asia/Seoul';
 
